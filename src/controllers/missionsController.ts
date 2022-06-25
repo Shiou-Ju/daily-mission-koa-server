@@ -1,5 +1,6 @@
 import Koa from 'koa';
 import Router from 'koa-router';
+import { pool } from '../connections/postgres';
 
 export const getSingleMission = async (
   ctx: Router.RouterContext,
@@ -27,5 +28,8 @@ export const getAllMissions = async (
 ) => {
   // TODO:
   ctx.body = { data: 'all missions' };
+  const res = await pool.query('SELECT NOW();');
+  console.log(res.rows);
+
   await next();
 };

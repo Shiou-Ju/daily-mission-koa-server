@@ -1,0 +1,26 @@
+{
+  "name": "koa-daily-missions",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/Shiou-Ju/daily-mission-koa-server.git",
+  "author": "Shiou-Ju <75402531+Shiou-Ju@users.noreply.github.com>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "tsc && node ."
+  },
+  "dependencies": {
+    "@types/koa": "^2.13.4",
+    "koa": "^2.13.4",
+    "koa-bodyparser": "^4.3.0",
+    "koa-json": "^2.0.2",
+    "koa-logger": "^3.2.1",
+    "koa-router": "^10.1.1"
+  },
+  "devDependencies": {
+    "@types/koa-json": "^2.0.20",
+    "@types/koa-logger": "^3.1.2",
+    "@types/koa-router": "^7.4.4",
+    "@types/node": "^18.0.0",
+    "typescript": "^4.7.4"
+  }
+}

@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@types/koa": "^2.13.4",
+    "dotenv": "^16.0.1",
     "koa": "^2.13.4",
     "koa-bodyparser": "^4.3.0",
     "koa-json": "^2.0.2",

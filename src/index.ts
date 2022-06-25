@@ -1,13 +1,11 @@
 // node modules
-import 'dotenv/config';
 import Koa from 'koa';
 import logger from 'koa-logger';
 import json from 'koa-json';
 import bodyParser = require('koa-bodyparser');
 // local modules
 import { router } from './routes/routes';
-
-const { PORT } = process.env;
+import { PORT } from './constants/processEnvs';
 
 const app = new Koa();
 

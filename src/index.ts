@@ -1,8 +1,8 @@
 // node modules
 import 'dotenv/config';
-import * as Koa from 'koa';
-import * as logger from 'koa-logger';
-import * as json from 'koa-json';
+import Koa from 'koa';
+import logger from 'koa-logger';
+import json from 'koa-json';
 import bodyParser = require('koa-bodyparser');
 // local modules
 import { router } from './routes/routes';

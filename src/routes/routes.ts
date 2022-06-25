@@ -1,16 +1,13 @@
-import * as Router from 'koa-router';
+import Router from 'koa-router';
+import {
+  getSingleMission,
+  updateSingleMission,
+} from '../controllers/missionsController';
 
 const router = new Router();
 
-router.get('/', async (ctx, next) => {
-  ctx.body = { data: 'test' };
-  await next();
-});
+router.get('/missions/:id', getSingleMission);
 
-router.post('/', async (ctx, next) => {
-  const requestBody = ctx.request.body;
-  ctx.body = { data: 'received', requestBody };
-  await next();
-});
+router.post('/missions/:id', updateSingleMission);
 
 export { router };

@@ -22,6 +22,22 @@ export const updateSingleMission = async (
   await next();
 };
 
+// TODO: create single mission
+export const createMission = async (
+  ctx: Router.RouterContext,
+  next: Koa.Next
+) => {
+  const res = await pool.query('SELECT NOW();');
+  
+  ctx.body = { data: 'all missions' };
+
+  await next();
+};
+
+
+// TODO: delete single mission
+
+
 export const getAllMissions = async (
   ctx: Router.RouterContext,
   next: Koa.Next

@@ -7,9 +7,9 @@ import {
   POSTGRES_PORT,
 } from '../constants/processEnvs';
 
-// TODO: fix error type
 type DbResponse = {
   result: pg.QueryResult | null;
+  // TODO: fix error type
   error: any | null;
 };
 
@@ -22,8 +22,6 @@ const config: pg.ConnectionConfig = {
   // TODO: The server does not support SSL connections
   // ssl: true,
 };
-
-console.log(config);
 
 const pool = new pg.Pool(config);
 

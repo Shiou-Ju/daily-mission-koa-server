@@ -1,6 +1,7 @@
 import Koa from 'koa';
 import Router from 'koa-router';
 import { pool } from '../connections/postgres';
+import { getMissionsService } from '../services/missionServices';
 
 export const getSingleMission = async (
   ctx: Router.RouterContext,
@@ -22,30 +23,28 @@ export const updateSingleMission = async (
   await next();
 };
 
-// TODO: create single mission
 export const createMission = async (
   ctx: Router.RouterContext,
   next: Koa.Next
 ) => {
+  // TODO: create single mission
   const res = await pool.query('SELECT NOW();');
-  
+  res;
+
   ctx.body = { data: 'all missions' };
 
   await next();
 };
 
-
 // TODO: delete single mission
-
 
 export const getAllMissions = async (
   ctx: Router.RouterContext,
   next: Koa.Next
 ) => {
   // TODO:
-  ctx.body = { data: 'all missions' };
-  const res = await pool.query('SELECT NOW();');
-  console.log(res.rows);
+  const docs = await getMissionsService();
+  ctx.body = { success: true, data: docs };
 
   await next();
 };

@@ -3,6 +3,7 @@ import Koa from 'koa';
 import logger from 'koa-logger';
 import json from 'koa-json';
 import bodyParser = require('koa-bodyparser');
+import cors from '@koa/cors';
 // local modules
 import { router } from './routes/routes';
 import { PORT } from './constants/processEnvs';
@@ -10,6 +11,7 @@ import { PORT } from './constants/processEnvs';
 const app = new Koa();
 
 // middleware
+app.use(cors());
 app.use(json());
 app.use(logger());
 app.use(bodyParser());

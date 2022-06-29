@@ -6,8 +6,8 @@
   "author": "Shiou-Ju <75402531+Shiou-Ju@users.noreply.github.com>",
   "license": "MIT",
   "scripts": {
-    "start": "tsc && node .",
-    "dev": "tsc -w & nodemon -w dist ."
+    "start": "tsc && node ./dist/index.js",
+    "dev": "nodemon --watch './**/*.ts' --exec 'ts-node' src/index.ts "
   },
   "dependencies": {
     "@koa/cors": "^3.3.0",
@@ -18,7 +18,8 @@
     "koa-json": "^2.0.2",
     "koa-logger": "^3.2.1",
     "koa-router": "^10.1.1",
-    "pg": "^8.7.3"
+    "pg": "^8.7.3",
+    "ts-node": "^10.8.0"
   },
   "devDependencies": {
     "@types/koa-bodyparser": "^4.3.7",
@@ -29,6 +30,7 @@
     "@types/node": "^18.0.0",
     "@types/pg": "^8.6.5",
     "nodemon": "^2.0.18",
+    "ts-node": "^10.8.1",
     "typescript": "^4.7.4"
   }
 }

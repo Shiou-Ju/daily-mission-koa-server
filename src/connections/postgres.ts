@@ -25,4 +25,38 @@ const config: pg.ConnectionConfig = {
 
 const pool = new pg.Pool(config);
 
-export { pool, DbResponse };
+const checkTablesStatus = async () => {
+  await createTablesIfNotExist();
+};
+
+const createTablesIfNotExist = async () => {
+  const missionTable = `CREATE TABLE IF NOT EXISTS missions (
+    id bigserial,
+    name varchar(255),
+    unit varchar(255),
+    amount decimal(10,2),
+    isFixed boolean,
+    increment decimal(10,2),
+    createdAt timestamp,
+    updatedAt timestamp
+);
+`;
+
+  const userTable = `CREATE TABLE IF NOT EXISTS users (
+  id bigserial,
+  name varchar(255),
+  password varchar(255),
+  streak bigint
+);
+`;
+
+  const queries = [missionTable, userTable];
+
+  const result = await Promise.all(
+    queries.map(async (queryString) => await pool.query(queryString))
+  );
+
+  return result;
+};
+
+export { pool, DbResponse, checkTablesStatus };

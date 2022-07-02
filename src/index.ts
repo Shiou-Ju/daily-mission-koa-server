@@ -7,6 +7,7 @@ import cors from '@koa/cors';
 // local modules
 import { router } from './routes/routes';
 import { PORT } from './constants/processEnvs';
+import { checkTablesStatus } from './connections/postgres';
 
 const app = new Koa();
 
@@ -22,3 +23,5 @@ app.use(router.routes()).use(router.allowedMethods);
 app.listen(PORT, () => {
   console.log(`server is running at ${PORT}`);
 });
+
+checkTablesStatus();

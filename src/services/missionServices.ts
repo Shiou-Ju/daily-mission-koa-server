@@ -31,18 +31,3 @@ export const createMissionsService = async (
 
   return row;
 };
-
-const createTableIfNotExist = async (tableName: string, columns: column[]) => {
-  // TODO: make it work
-  const processedColumns = columns.map((column) => {
-    return `${column.name} ${column.type}`;
-  });
-  const content = processedColumns.join(', \n');
-  const queryString = `CREATE TABLE IF NOT EXISTS ${tableName} (
-    ${content}
-  );`;
-
-  const res = await pool.query(queryString);
-
-  return res;
-};

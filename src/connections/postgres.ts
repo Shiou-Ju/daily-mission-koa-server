@@ -25,10 +25,6 @@ const config: pg.ConnectionConfig = {
 
 const pool = new pg.Pool(config);
 
-const checkTablesStatus = async () => {
-  await createTablesIfNotExist();
-};
-
 const createTablesIfNotExist = async () => {
   const missionTable = `CREATE TABLE IF NOT EXISTS missions (
     id bigserial,
@@ -59,4 +55,11 @@ const createTablesIfNotExist = async () => {
   return result;
 };
 
-export { pool, DbResponse, checkTablesStatus };
+const checkTablesStatus = async () => {
+  await createTablesIfNotExist();
+  console.log('checkTablesStatus: tables ready');
+};
+
+checkTablesStatus();
+
+export { pool, DbResponse };

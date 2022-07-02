@@ -1,6 +1,5 @@
 import Koa from 'koa';
 import Router from 'koa-router';
-import { pool } from '../connections/postgres';
 import {
   createMission,
   getMissions,
@@ -8,6 +7,14 @@ import {
   updateMissionByid,
   deleteMissionById,
 } from '../services/missionServices';
+
+export interface RequestFields {
+  name: string;
+  unit: string;
+  amount: string;
+  isFixed: string;
+  increment: string;
+}
 
 /** 取得單一任務 */
 export const getMissionController = async (
@@ -62,11 +69,14 @@ export const createMissionController = async (
   next: Koa.Next
 ) => {
   const { name, unit, amount, isFixed, increment } = ctx.request.body;
+  const fields: RequestFields = { name, unit, amount, isFixed, increment };
 
   // TODO: throw error according to different field
   try {
     if (!name || !unit || !amount || !isFixed || !increment) {
-      throw new Error('missing field(s)');
+      throw new Error(
+        `missing request body: \n${generateMissionFieldsMessage(fields)}`
+      );
     }
 
     const row = await createMission(
@@ -95,6 +105,7 @@ export const updateMissionController = async (
   next: Koa.Next
 ) => {
   const { name, unit, amount, isFixed, increment } = ctx.request.body;
+  const fields: RequestFields = { name, unit, amount, isFixed, increment };
 
   const id = parseInt(ctx.params.id);
 
@@ -105,7 +116,9 @@ export const updateMissionController = async (
     }
 
     if (!name || !unit || !amount || !isFixed || !increment) {
-      throw new Error('missing field(s)');
+      throw new Error(
+        `missing request body: \n${generateMissionFieldsMessage(fields)}`
+      );
     }
 
     // TODO: improve later introducing to variables
@@ -151,4 +164,16 @@ export const deleteMissionController = async (
     };
     await next();
   }
+};
+
+/** missing fields helper */
+const generateMissionFieldsMessage = (fields: RequestFields) => {
+  const processedFields = Object.entries(fields).map((field) => {
+    const [key, value] = field;
+    return `${key}: ${value}`;
+  });
+
+  const message = processedFields.join(', ');
+
+  return message;
 };

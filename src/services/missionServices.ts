@@ -64,6 +64,7 @@ export const updateMissionByid = async (
     name,
     unit,
     amount: amount.toString().includes('.') ? `${amount}` : `${amount}.0`,
+    // FIXME: isfixed
     isfixed: isFixed,
     increment: increment.toString().includes('.')
       ? `${increment}`
@@ -72,6 +73,7 @@ export const updateMissionByid = async (
 
   const hasToUpdate = !_.isEqual(newFields, orignalFields);
   if (hasToUpdate) {
+    // FIXME: isfixed
     const query = `
     UPDATE missions
     SET name = '${name}', unit = '${unit}', amount = ${amount}, isfixed = ${isFixed}, increment = ${increment}, updatedAt = now()

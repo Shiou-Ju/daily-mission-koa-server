@@ -7,6 +7,31 @@ type column = {
   type: string;
 };
 
+export const getMissionsService = async () => {
+  const result = await pool.query('SELECT * FROM missions;');
+
+  const missions: Mission[] = result.rows;
+
+  return missions;
+};
+
+export const getSingleMissionService = async (id: number) => {
+  const result = await pool.query(`SELECT * FROM missions WHERE id = ${id};`);
+
+  const missions: Mission[] = result.rows;
+
+  return missions;
+};
+
+export const createMissionsService = async (
+  queryString: Query
+): Promise<QueryResult> => {
+  // TODO:
+  const row = await pool.query('');
+
+  return row;
+};
+
 const createTableIfNotExist = async (tableName: string, columns: column[]) => {
   // TODO: make it work
   const processedColumns = columns.map((column) => {
@@ -20,64 +45,4 @@ const createTableIfNotExist = async (tableName: string, columns: column[]) => {
   const res = await pool.query(queryString);
 
   return res;
-};
-
-export const createMissionService = async (
-  queryString: Query
-): Promise<QueryResult> => {
-  // TODO:
-  const row = await pool.query('');
-
-  return row;
-};
-
-export const getMissionsService = async () => {
-  // TODO: mock date temporarily
-
-  const missions: Mission[] = [
-    {
-      id: 11,
-      name: '伏地挺身',
-      unit: '組',
-      isFixed: false,
-      amount: 30,
-    },
-    { id: 12, name: '唸英文', isFixed: true, unit: '小時', amount: 1.5 },
-    {
-      id: 13,
-      name: '仰臥起坐',
-      isFixed: false,
-      unit: '組',
-      increment: 1,
-      amount: 24,
-    },
-    {
-      id: 14,
-      name: '開合跳',
-      isFixed: false,
-      unit: '組',
-      increment: 5,
-      amount: 30,
-    },
-    {
-      id: 15,
-      name: '左勾拳',
-      isFixed: false,
-      unit: '組',
-      increment: 3,
-      amount: 35,
-    },
-    {
-      id: 16,
-      name: '右鉤拳 ',
-      isFixed: false,
-      unit: '組',
-      increment: 3,
-      amount: 35,
-    },
-    { id: 17, name: 'BBC news', isFixed: true, unit: '小時', amount: 0.5 },
-    { id: 18, name: '學習 Angular', isFixed: true, unit: '小時', amount: 2.5 },
-  ];
-
-  return missions;
 };

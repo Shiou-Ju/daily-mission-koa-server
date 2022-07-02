@@ -25,34 +25,4 @@ const config: pg.ConnectionConfig = {
 
 const pool = new pg.Pool(config);
 
-// const client = new pg.Client(config);
-
-// const queryDatabase = async (querySentence: string) => {
-//   const dbResponse = {
-//     result: null,
-//     error: null,
-//   };
-//   client.connect(async (err) => {
-//     if (err) throw err;
-
-//     try {
-//       const result = await client.query(querySentence);
-//       console.log('Table created successfully!');
-
-//       dbResponse.result = result;
-//     } catch (error) {
-//       console.log(error);
-//       console.log('Something went wront. Finished execution.');
-
-//       dbResponse.error = error;
-//     }
-//   });
-
-//   client.end(() => {
-//     console.log('Closed client connection');
-//   });
-
-//   return dbResponse;
-// };
-
 export { pool, DbResponse };

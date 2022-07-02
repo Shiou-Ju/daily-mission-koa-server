@@ -1,16 +1,42 @@
 import Koa from 'koa';
 import Router from 'koa-router';
 import { pool } from '../connections/postgres';
-import { getMissionsService } from '../services/missionServices';
+import {
+  getMissionsService,
+  getSingleMissionService,
+} from '../services/missionServices';
 
 export const getSingleMission = async (
   ctx: Router.RouterContext,
   next: Koa.Next
 ) => {
   // TODO:
-  const id = ctx.params.id;
-  ctx.body = { data: 'test', id };
-  await next();
+  try {
+    const id = parseInt(ctx.params.id);
+    const docs = await getSingleMissionService(id);
+    ctx.body = { success: true, data: docs };
+    await next();
+  } catch (error) {
+    // TODO: throw 404 if no row exist
+    ctx.body = { success: false, data: error };
+    await next();
+  }
+};
+
+export const getAllMissions = async (
+  ctx: Router.RouterContext,
+  next: Koa.Next
+) => {
+  try {
+    const docs = await getMissionsService();
+    ctx.body = { success: true, data: docs };
+
+    await next();
+  } catch (error) {
+    ctx.body = { success: false, data: error };
+
+    await next();
+  }
 };
 
 export const updateSingleMission = async (
@@ -37,14 +63,15 @@ export const createMission = async (
 };
 
 // TODO: delete single mission
-
-export const getAllMissions = async (
+export const deleteMissions = async (
   ctx: Router.RouterContext,
   next: Koa.Next
 ) => {
-  // TODO:
-  const docs = await getMissionsService();
-  ctx.body = { success: true, data: docs };
+  // TODO: create single mission
+  const res = await pool.query('SELECT NOW();');
+  res;
+
+  ctx.body = { data: 'all missions' };
 
   await next();
 };

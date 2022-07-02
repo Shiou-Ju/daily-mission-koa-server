@@ -4,17 +4,18 @@ import {
   updateMissionController,
   getAllMissionsController,
   createMissionController,
+  deleteMissionController,
 } from '../controllers/missionsController';
 
 const router = new Router();
 
+// missions routes
 router.get('/missions', getAllMissionsController);
-router.get('/missions/:id', getMissionController);
-
 router.post('/missions', createMissionController);
-// TODO:
+
+// paramerterized mission routes
+router.get('/missions/:id', getMissionController);
 router.put('/missions/:id', updateMissionController);
-// TODO:
-// router.delete()
+router.delete('/missions/:id', deleteMissionController);
 
 export { router };

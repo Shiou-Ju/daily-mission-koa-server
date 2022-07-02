@@ -15,9 +15,9 @@ export const getMissions = async () => {
 export const getMissionById = async (id: number) => {
   const result = await pool.query(`SELECT * FROM missions WHERE id = ${id};`);
 
-  const missions: Mission[] = result.rows;
+  const [mission]: Mission[] = result.rows;
 
-  return missions;
+  return mission;
 };
 
 export const createMission = async (
@@ -38,7 +38,7 @@ export const createMission = async (
   const result = await pool.query(query);
   const [{ id }] = result.rows;
 
-  const [created] = await getMissionById(id);
+  const created = await getMissionById(id);
 
   return created;
 };
@@ -52,13 +52,11 @@ export const updateMissionByid = async (
   isFixed: boolean,
   increment: number
 ): Promise<Mission> => {
-  const [targetRow] = await getMissionById(id);
+  const targetRow = await getMissionById(id);
 
   if (!targetRow) {
     throw new Error('404');
   }
-
-  console.log(targetRow);
 
   const orignalFields = _.omit(targetRow, ['createdat', 'updatedat', 'id']);
 
@@ -82,8 +80,9 @@ export const updateMissionByid = async (
 
     console.log(query);
     await pool.query(query);
+    console.log(`id ${id} updated`);
 
-    const [updated] = await getMissionById(id);
+    const updated = await getMissionById(id);
 
     return updated;
   }
@@ -92,6 +91,27 @@ export const updateMissionByid = async (
   // maybe considering move some lines to controller
   console.log(`id ${id} not modified`);
   return targetRow;
+};
+
+export const deleteMissionById = async (id: number) => {
+  const targetRow = await getMissionById(id);
+
+  if (!targetRow) {
+    throw new Error('404');
+  }
+
+  await pool.query(`DELETE FROM missions WHERE id = ${id};`);
+
+  const mission = await getMissionById(id);
+
+  
+
+  if (!!mission) {
+    throw new Error(`Failed deleting id ${id}`);
+  }
+
+  console.log(`id ${id} deleted`);
+  return mission;
 };
 
 // TODO: see if needed

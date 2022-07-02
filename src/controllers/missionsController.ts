@@ -6,6 +6,7 @@ import {
   getMissions,
   getMissionById,
   updateMissionByid,
+  deleteMissionById,
 } from '../services/missionServices';
 
 /** 取得單一任務 */
@@ -16,10 +17,16 @@ export const getMissionController = async (
   try {
     const id = parseInt(ctx.params.id);
     const row = await getMissionById(id);
+
+    // TODO: see if 404 here or in the service
+    if (!row) {
+      throw new Error('404');
+    }
+
     ctx.body = { success: true, data: row };
     await next();
   } catch (error) {
-    // TODO: throw 404 if no row exist
+    console.error(error);
     ctx.body = {
       success: false,
       data: JSON.stringify(error, Object.getOwnPropertyNames(error)),
@@ -39,6 +46,7 @@ export const getAllMissionsController = async (
 
     await next();
   } catch (error) {
+    console.error(error);
     ctx.body = {
       success: false,
       data: JSON.stringify(error, Object.getOwnPropertyNames(error)),
@@ -72,7 +80,7 @@ export const createMissionController = async (
 
     await next();
   } catch (error) {
-    console.log(error);
+    console.error(error);
     ctx.body = {
       success: false,
       data: JSON.stringify(error, Object.getOwnPropertyNames(error)),
@@ -109,11 +117,12 @@ export const updateMissionController = async (
       isFixed === 'true',
       Number(increment)
     );
+    // TODO: return diffs
     ctx.body = { success: true, data: rows };
 
     await next();
   } catch (error) {
-    console.log(error);
+    console.error(error);
     ctx.body = {
       success: false,
       data: JSON.stringify(error, Object.getOwnPropertyNames(error)),
@@ -128,10 +137,18 @@ export const deleteMissionController = async (
   ctx: Router.RouterContext,
   next: Koa.Next
 ) => {
-  const res = await pool.query('SELECT NOW();');
-  res;
-
-  ctx.body = { data: 'all missions' };
-
-  await next();
+  try {
+    const id = parseInt(ctx.params.id);
+    const row = await deleteMissionById(id);
+    ctx.body = { success: true, data: !row ? [] : row };
+    await next();
+  } catch (error) {
+    console.error(error);
+    // TODO: throw 404 if no row exist
+    ctx.body = {
+      success: false,
+      data: JSON.stringify(error, Object.getOwnPropertyNames(error)),
+    };
+    await next();
+  }
 };

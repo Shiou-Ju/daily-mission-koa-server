@@ -13,7 +13,7 @@ router.get('/missions/:id', getSingleMission);
 
 router.post('/missions', createMission);
 // TODO:
-router.post('/missions/:id', updateSingleMission);
+router.put('/missions/:id', updateSingleMission);
 // TODO:
 // router.delete()
 

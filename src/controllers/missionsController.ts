@@ -4,7 +4,8 @@ import { pool } from '../connections/postgres';
 import {
   createMissionService,
   getMissionsService,
-  getSingleMissionService,
+  getMissionById,
+  updateMissionService,
 } from '../services/missionServices';
 
 /** 取得單一任務 */
@@ -14,8 +15,8 @@ export const getSingleMission = async (
 ) => {
   try {
     const id = parseInt(ctx.params.id);
-    const rows = await getSingleMissionService(id);
-    ctx.body = { success: true, data: rows };
+    const row = await getMissionById(id);
+    ctx.body = { success: true, data: row };
     await next();
   } catch (error) {
     // TODO: throw 404 if no row exist
@@ -54,19 +55,20 @@ export const createMission = async (
 ) => {
   const { name, unit, amount, isFixed, increment } = ctx.request.body;
 
+  // TODO: throw error according to different field
   try {
     if (!name || !unit || !amount || !isFixed || !increment) {
       throw new Error('missing field(s)');
     }
 
-    const rows = await createMissionService(
+    const row = await createMissionService(
       name,
       unit,
       Number(amount),
       isFixed,
       Number(increment)
     );
-    ctx.body = { success: true, data: rows };
+    ctx.body = { success: true, data: row };
 
     await next();
   } catch (error) {
@@ -84,10 +86,41 @@ export const updateSingleMission = async (
   ctx: Router.RouterContext,
   next: Koa.Next
 ) => {
-  // TODO:
-  const requestBody = ctx.request.body;
-  ctx.body = { data: 'received', requestBody };
-  await next();
+  const { name, unit, amount, isFixed, increment } = ctx.request.body;
+
+  const id = parseInt(ctx.params.id);
+
+  // TODO: throw error according to different field
+  try {
+    if (!id) {
+      throw new Error('Please specify target row id');
+    }
+
+    if (!name || !unit || !amount || !isFixed || !increment) {
+      throw new Error('missing field(s)');
+    }
+
+    // TODO: improve later
+    const rows = await updateMissionService(
+      id,
+      name,
+      unit,
+      Number(amount),
+      isFixed === 'true',
+      Number(increment)
+    );
+    ctx.body = { success: true, data: rows };
+
+    await next();
+  } catch (error) {
+    console.log(error);
+    ctx.body = {
+      success: false,
+      data: JSON.stringify(error, Object.getOwnPropertyNames(error)),
+    };
+
+    await next();
+  }
 };
 
 // TODO: delete single mission

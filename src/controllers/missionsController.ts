@@ -2,14 +2,14 @@ import Koa from 'koa';
 import Router from 'koa-router';
 import { pool } from '../connections/postgres';
 import {
-  createMissionService,
-  getMissionsService,
+  createMission,
+  getMissions,
   getMissionById,
-  updateMissionService,
+  updateMissionByid,
 } from '../services/missionServices';
 
 /** 取得單一任務 */
-export const getSingleMission = async (
+export const getMissionController = async (
   ctx: Router.RouterContext,
   next: Koa.Next
 ) => {
@@ -29,12 +29,12 @@ export const getSingleMission = async (
 };
 
 /** 取得所有任務 */
-export const getAllMissions = async (
+export const getAllMissionsController = async (
   ctx: Router.RouterContext,
   next: Koa.Next
 ) => {
   try {
-    const rows = await getMissionsService();
+    const rows = await getMissions();
     ctx.body = { success: true, data: rows };
 
     await next();
@@ -49,7 +49,7 @@ export const getAllMissions = async (
 };
 
 /** 建立任務 */
-export const createMission = async (
+export const createMissionController = async (
   ctx: Router.RouterContext,
   next: Koa.Next
 ) => {
@@ -61,7 +61,7 @@ export const createMission = async (
       throw new Error('missing field(s)');
     }
 
-    const row = await createMissionService(
+    const row = await createMission(
       name,
       unit,
       Number(amount),
@@ -82,7 +82,7 @@ export const createMission = async (
   }
 };
 
-export const updateSingleMission = async (
+export const updateMissionController = async (
   ctx: Router.RouterContext,
   next: Koa.Next
 ) => {
@@ -100,8 +100,8 @@ export const updateSingleMission = async (
       throw new Error('missing field(s)');
     }
 
-    // TODO: improve later
-    const rows = await updateMissionService(
+    // TODO: improve later introducing to variables
+    const rows = await updateMissionByid(
       id,
       name,
       unit,
@@ -124,11 +124,10 @@ export const updateSingleMission = async (
 };
 
 // TODO: delete single mission
-export const deleteMissions = async (
+export const deleteMissionController = async (
   ctx: Router.RouterContext,
   next: Koa.Next
 ) => {
-  // TODO: create single mission
   const res = await pool.query('SELECT NOW();');
   res;
 

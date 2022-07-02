@@ -4,7 +4,7 @@ import _ from 'lodash';
 import { pool } from '../connections/postgres';
 import { Mission } from '../interface/Mission';
 
-export const getMissionsService = async () => {
+export const getMissions = async () => {
   const result = await pool.query('SELECT * FROM missions;');
 
   const missions: Mission[] = result.rows;
@@ -20,19 +20,20 @@ export const getMissionById = async (id: number) => {
   return missions;
 };
 
-export const createMissionService = async (
+export const createMission = async (
   name: string,
   unit: string,
   amount: number,
   isFixed: boolean,
   increment: number
 ): Promise<Mission> => {
-  // TODO:
-
+  // TODO: abstract query strings to different components, like 'returnId' = 'RETURNING id'
   const query = `INSERT INTO missions(name, unit, amount, isFixed, increment, createdAt, updatedAt)
   VALUES 
   ('${name}','${unit}',${amount},${isFixed},${increment},now(),now())
   RETURNING id;`;
+
+  console.log(query);
 
   const result = await pool.query(query);
   const [{ id }] = result.rows;
@@ -42,7 +43,7 @@ export const createMissionService = async (
   return created;
 };
 
-export const updateMissionService = async (
+export const updateMissionByid = async (
   // TODO: fix uppercase in columns and interfaces
   id: number,
   name: string,
@@ -78,6 +79,8 @@ export const updateMissionService = async (
     SET name = '${name}', unit = '${unit}', amount = ${amount}, isfixed = ${isFixed}, increment = ${increment}, updatedAt = now()
     WHERE id = ${id};
     `;
+
+    console.log(query);
     await pool.query(query);
 
     const [updated] = await getMissionById(id);
@@ -85,7 +88,9 @@ export const updateMissionService = async (
     return updated;
   }
 
-  // TODO: code Not modified
+  // TODO: return error code Not modified
+  // maybe considering move some lines to controller
+  console.log(`id ${id} not modified`);
   return targetRow;
 };
 

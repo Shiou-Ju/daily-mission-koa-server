@@ -1,19 +1,19 @@
 import Router from 'koa-router';
 import {
-  getSingleMission,
-  updateSingleMission,
-  getAllMissions,
-  createMission,
+  getMissionController,
+  updateMissionController,
+  getAllMissionsController,
+  createMissionController,
 } from '../controllers/missionsController';
 
 const router = new Router();
 
-router.get('/missions', getAllMissions);
-router.get('/missions/:id', getSingleMission);
+router.get('/missions', getAllMissionsController);
+router.get('/missions/:id', getMissionController);
 
-router.post('/missions', createMission);
+router.post('/missions', createMissionController);
 // TODO:
-router.put('/missions/:id', updateSingleMission);
+router.put('/missions/:id', updateMissionController);
 // TODO:
 // router.delete()
 

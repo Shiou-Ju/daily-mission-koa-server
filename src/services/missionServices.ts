@@ -2,11 +2,6 @@ import { Query, QueryResult } from 'pg';
 import { pool } from '../connections/postgres';
 import { Mission } from '../interface/Mission';
 
-type column = {
-  name: string;
-  type: string;
-};
-
 export const getMissionsService = async () => {
   const result = await pool.query('SELECT * FROM missions;');
 
@@ -23,11 +18,21 @@ export const getSingleMissionService = async (id: number) => {
   return missions;
 };
 
-export const createMissionsService = async (
-  queryString: Query
+export const createMissionService = async (
+  name: string,
+  unit: string,
+  amount: number,
+  isFixed: boolean,
+  increment: number
 ): Promise<QueryResult> => {
   // TODO:
-  const row = await pool.query('');
+
+  const query = `INSERT INTO missions(name, unit, amount, isFixed, increment, createdAt, updatedAt)
+  VALUES 
+  ('${name}','${unit}',${amount},${isFixed},${increment},now(),now());`;
+
+  console.log(query);
+  const row = await pool.query(query);
 
   return row;
 };

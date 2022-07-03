@@ -28,7 +28,7 @@ export const createMission = async (
   increment: number
 ): Promise<Mission> => {
   // TODO: abstract query strings to different components, like 'returnId' = 'RETURNING id'
-  const query = `INSERT INTO missions(name, unit, amount, isFixed, increment, createdAt, updatedAt)
+  const query = `INSERT INTO missions(name, unit, amount, is_fixed, increment, created_at, updated_at)
   VALUES 
   ('${name}','${unit}',${amount},${isFixed},${increment},now(),now())
   RETURNING id;`;
@@ -58,14 +58,15 @@ export const updateMissionByid = async (
     throw new Error('404');
   }
 
-  const orignalFields = _.omit(targetRow, ['createdat', 'updatedat', 'id']);
+  const omitFields = ['created_at', 'updated_at', 'id'];
+
+  const orignalFields = _.omit(targetRow, omitFields);
 
   const newFields = {
     name,
     unit,
     amount: amount.toString().includes('.') ? `${amount}` : `${amount}.0`,
-    // FIXME: isfixed
-    isfixed: isFixed,
+    is_fixed: isFixed,
     increment: increment.toString().includes('.')
       ? `${increment}`
       : `${increment}.0`,
@@ -73,10 +74,9 @@ export const updateMissionByid = async (
 
   const hasToUpdate = !_.isEqual(newFields, orignalFields);
   if (hasToUpdate) {
-    // FIXME: isfixed
     const query = `
     UPDATE missions
-    SET name = '${name}', unit = '${unit}', amount = ${amount}, isfixed = ${isFixed}, increment = ${increment}, updatedAt = now()
+    SET name = '${name}', unit = '${unit}', amount = ${amount}, is_fixed = ${isFixed}, increment = ${increment}, updated_at = now()
     WHERE id = ${id};
     `;
 
@@ -98,6 +98,7 @@ export const updateMissionByid = async (
 export const deleteMissionById = async (id: number) => {
   const targetRow = await getMissionById(id);
 
+  // TODO: status code
   if (!targetRow) {
     throw new Error('404');
   }
@@ -105,8 +106,6 @@ export const deleteMissionById = async (id: number) => {
   await pool.query(`DELETE FROM missions WHERE id = ${id};`);
 
   const mission = await getMissionById(id);
-
-  
 
   if (!!mission) {
     throw new Error(`Failed deleting id ${id}`);
@@ -120,7 +119,7 @@ export const deleteMissionById = async (id: number) => {
 const getModified = async (rowCount: number) => {
   const query = ` SELECT *
   FROM missions
-  ORDER BY createdAt DESC
+  ORDER BY created_at DESC
   LIMIT ${rowCount}`;
 
   const result = await pool.query(query);

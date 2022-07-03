@@ -30,11 +30,11 @@ const createTablesIfNotExist = async () => {
     id bigserial,
     name varchar(255),
     unit varchar(255),
-    amount decimal(10,2),
-    isFixed boolean,
-    increment decimal(10,2),
-    createdAt timestamp,
-    updatedAt timestamp
+    amount decimal(10,1),
+    is_fixed boolean,
+    increment decimal(10,1),
+    created_at timestamp,
+    updated_at timestamp
 );
 `;
 

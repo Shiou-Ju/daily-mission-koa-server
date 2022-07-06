@@ -12,6 +12,17 @@ export const getMissions = async () => {
   return missions;
 };
 
+export const searchMissions = async (term: string) => {
+  const result = await pool.query(`
+  SELECT *
+  FROM   missions
+  WHERE  name ~ '${term}';`);
+
+  const missions: Mission[] = result.rows;
+
+  return missions;
+};
+
 export const getMissionById = async (id: number) => {
   const result = await pool.query(`SELECT * FROM missions WHERE id = ${id};`);
 

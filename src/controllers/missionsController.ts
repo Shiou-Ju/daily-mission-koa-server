@@ -1,11 +1,13 @@
 import Koa from 'koa';
 import Router from 'koa-router';
+import _ from 'lodash';
 import {
   createMission,
   getMissions,
   getMissionById,
   updateMissionByid,
   deleteMissionById,
+  searchMissions,
 } from '../services/missionServices';
 
 export interface RequestFields {
@@ -63,6 +65,39 @@ export const getAllMissionsController = async (
   }
 };
 
+/** 搜尋任務 */
+export const searchMissionController = async (
+  ctx: Router.RouterContext,
+  next: Koa.Next
+) => {
+  try {
+    if (_.isEmpty(ctx.request.query)) {
+      throw new Error('no query strings');
+    }
+
+    const { missionName } = ctx.request.query;
+
+    if (typeof missionName !== 'string') {
+      throw new Error('query string is not a string');
+    }
+
+    // TODO: why type can be string[]
+    const rows = await searchMissions(missionName);
+
+    ctx.body = { success: true, data: rows };
+
+    await next();
+  } catch (error) {
+    console.error(error);
+    ctx.body = {
+      success: false,
+      data: JSON.stringify(error, Object.getOwnPropertyNames(error)),
+    };
+
+    await next();
+  }
+};
+
 /** 建立任務 */
 export const createMissionController = async (
   ctx: Router.RouterContext,
@@ -79,6 +114,7 @@ export const createMissionController = async (
       );
     }
 
+    // TODO: introduce params as vars
     const row = await createMission(
       name,
       unit,
@@ -145,7 +181,6 @@ export const updateMissionController = async (
   }
 };
 
-// TODO: delete single mission
 export const deleteMissionController = async (
   ctx: Router.RouterContext,
   next: Koa.Next
